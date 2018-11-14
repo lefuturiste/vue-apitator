@@ -1,0 +1,39 @@
+{
+  "name": "apitator",
+  "version": "0.0.1",
+  "description": "A simple way to query your REST or your GraphQL API in your Vue.js app",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "jest --verbose",
+    "test-watch": "jest --verbose --watchAll",
+    "dev": "./node_modules/.bin/tsc --watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lefuturiste/apitator.git"
+  },
+  "keywords": [
+    "api",
+    "graphql",
+    "rest",
+    "vue",
+    "vue2",
+    "plugin"
+  ],
+  "author": "lefuturiste <contact@lefuturiste.fr>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/lefuturiste/apitator/issues"
+  },
+  "homepage": "https://github.com/lefuturiste/apitator#readme",
+  "devDependencies": {
+    "@types/jest": "^23.3.2",
+    "jest": "^23.6.0",
+    "ts-jest": "^23.10.2",
+    "typescript": "^3.1.1"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "vue": "^2.5.17"
+  }
+}
