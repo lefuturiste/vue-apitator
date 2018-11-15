@@ -11,5 +11,6 @@ export default interface ClientOptionsInterface {
     maxHttpErrors?: number
     alertOnError?: boolean,
     globalCallbackOnError?: (error: AxiosError) => void,
+    setGlobalCallbackOnLoading?: (isLoading: boolean, loadingType?: string) => void,
     graphQLPath?: string
 }

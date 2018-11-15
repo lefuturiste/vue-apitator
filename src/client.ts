@@ -24,19 +24,25 @@ export default class client {
     }
 
     private toggleLoading() {
-        this.isLoading = !this.isLoading
+        this.isLoading = !this.isLoading;
+        if (this.options.setGlobalCallbackOnLoading !== undefined) {
+            this.options.setGlobalCallbackOnLoading(this.isLoading, this.loadingType)
+        }
     }
 
     private resetLoadingState(options: RequestOptionsInterface): void {
+        this.loadingType = 'normal';
+        this.httpErrors = 0;
         if (options.keepLoading === undefined || options.keepLoading === false) {
             this.toggleLoading();
         }
-        this.loadingType = 'normal';
-        this.httpErrors = 0;
     }
 
     public request(method: string, path: string, options: RequestOptionsInterface = {}): Promise<any> {
         return new Promise((resolve, reject) => {
+            if (options.loadingType !== '' && options.loadingType !== undefined) {
+                this.loadingType = options.loadingType
+            }
             this.toggleLoading();
             let requestConfig: AxiosRequestConfig = {
                 method: method,
@@ -49,9 +55,6 @@ export default class client {
             }
             if (options.withAuth) {
                 requestConfig.headers.Authorization = this.authorizationHeader
-            }
-            if (options.loadingType !== '' && options.loadingType !== undefined) {
-                this.loadingType = options.loadingType
             }
             let maxHttpErrors = this.options.maxHttpErrors == undefined ? options.maxHttpErrors == undefined ? 0 : options.maxHttpErrors : this.options.maxHttpErrors;
             let alertOnError = this.options.alertOnError == undefined ? options.alertOnError == undefined ? true : options.alertOnError : this.options.alertOnError;
@@ -102,5 +105,9 @@ export default class client {
 
     public setGlobalCallbackOnError(callback: (error: AxiosError) => void) {
         this.options.globalCallbackOnError = callback
+    }
+
+    public setGlobalCallbackOnLoading(callback: (isLoading: boolean) => void) {
+        this.options.setGlobalCallbackOnLoading = callback
     }
 }
