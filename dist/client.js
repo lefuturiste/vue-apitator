@@ -22,16 +22,22 @@ class client {
     }
     toggleLoading() {
         this.isLoading = !this.isLoading;
+        if (this.options.setGlobalCallbackOnLoading !== undefined) {
+            this.options.setGlobalCallbackOnLoading(this.isLoading, this.loadingType);
+        }
     }
     resetLoadingState(options) {
+        this.loadingType = 'normal';
+        this.httpErrors = 0;
         if (options.keepLoading === undefined || options.keepLoading === false) {
             this.toggleLoading();
         }
-        this.loadingType = 'normal';
-        this.httpErrors = 0;
     }
     request(method, path, options = {}) {
         return new Promise((resolve, reject) => {
+            if (options.loadingType !== '' && options.loadingType !== undefined) {
+                this.loadingType = options.loadingType;
+            }
             this.toggleLoading();
             let requestConfig = {
                 method: method,
@@ -44,9 +50,6 @@ class client {
             }
             if (options.withAuth) {
                 requestConfig.headers.Authorization = this.authorizationHeader;
-            }
-            if (options.loadingType !== '' && options.loadingType !== undefined) {
-                this.loadingType = options.loadingType;
             }
             let maxHttpErrors = this.options.maxHttpErrors == undefined ? options.maxHttpErrors == undefined ? 0 : options.maxHttpErrors : this.options.maxHttpErrors;
             let alertOnError = this.options.alertOnError == undefined ? options.alertOnError == undefined ? true : options.alertOnError : this.options.alertOnError;
@@ -91,6 +94,9 @@ class client {
     }
     setGlobalCallbackOnError(callback) {
         this.options.globalCallbackOnError = callback;
+    }
+    setGlobalCallbackOnLoading(callback) {
+        this.options.setGlobalCallbackOnLoading = callback;
     }
 }
 exports.default = client;
