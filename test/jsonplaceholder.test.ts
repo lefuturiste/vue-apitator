@@ -5,7 +5,6 @@ describe('requests', () => {
     let client = new Client({baseUrl: "https://jsonplaceholder.typicode.com"});
     test('get', () => {
         client.get('/users').then((response: AxiosResponse) => {
-            console.log(response.data);
             expect(response.status).toBe(200);
             expect(response.data.length).toBeDefined();
             expect(response.data.length).toBeGreaterThan(0);
@@ -23,6 +22,5 @@ describe('requests', () => {
             expect(response.data.id).toBeDefined();
             expect(client.isLoading).toBeFalsy()
         });
-        expect(client.isLoading).toBeTruthy();
     });
 });
