@@ -39,5 +39,32 @@ describe('requests', () => {
             }
             expect(client.isLoading).toBeFalsy()
         })
+    });
+    test('get_loading_type', () => {
+        client.setGlobalCallbackOnLoading((isLoading: boolean, loadingType?: string) => {
+            expect(loadingType).toBe('fooBar')
+        });
+        client.get('/status/200', { loadingType: 'fooBar' }).then((response: AxiosResponse) => {
+            expect(response.status).toEqual(200);
+        })
+    });
+    test('get_with_authorization', () => {
+        client.setAuthorizationToken('FooBar');
+        client.get('/get', { withAuth: true }).then((response: AxiosResponse) => {
+            expect(response.data.headers.Authorization).toEqual('Bearer FooBar');
+        })
+    });
+    test('put', () => {
+        client.setAuthorizationToken('FooBar');
+        client.put('/put', { foo: 'bar' }).then((response: AxiosResponse) => {
+            expect(response.data.json.foo).toEqual('bar');
+            expect(response.status).toEqual(200);
+        })
+    });
+    test('delete', () => {
+        client.setAuthorizationToken('FooBar');
+        client.delete('/delete').then((response: AxiosResponse) => {
+            expect(response.status).toEqual(200);
+        })
     })
 });

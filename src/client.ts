@@ -25,17 +25,17 @@ export default class client {
 
     private toggleLoading() {
         this.isLoading = !this.isLoading;
-        if (this.options.setGlobalCallbackOnLoading !== undefined) {
-            this.options.setGlobalCallbackOnLoading(this.isLoading, this.loadingType)
+        if (this.options.globalCallbackOnLoading !== undefined) {
+            this.options.globalCallbackOnLoading(this.isLoading, this.loadingType)
         }
     }
 
     private resetLoadingState(options: RequestOptionsInterface): void {
-        this.loadingType = 'normal';
         this.httpErrors = 0;
         if (options.keepLoading === undefined || options.keepLoading === false) {
             this.toggleLoading();
         }
+        this.loadingType = 'normal';
     }
 
     public request(method: string, path: string, options: RequestOptionsInterface = {}): Promise<any> {
@@ -107,7 +107,7 @@ export default class client {
         this.options.globalCallbackOnError = callback
     }
 
-    public setGlobalCallbackOnLoading(callback: (isLoading: boolean) => void) {
-        this.options.setGlobalCallbackOnLoading = callback
+    public setGlobalCallbackOnLoading(callback: (isLoading: boolean, loadingType?: string) => void) {
+        this.options.globalCallbackOnLoading = callback
     }
 }
