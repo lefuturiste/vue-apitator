@@ -22,16 +22,16 @@ class client {
     }
     toggleLoading() {
         this.isLoading = !this.isLoading;
-        if (this.options.setGlobalCallbackOnLoading !== undefined) {
-            this.options.setGlobalCallbackOnLoading(this.isLoading, this.loadingType);
+        if (this.options.globalCallbackOnLoading !== undefined) {
+            this.options.globalCallbackOnLoading(this.isLoading, this.loadingType);
         }
     }
     resetLoadingState(options) {
-        this.loadingType = 'normal';
         this.httpErrors = 0;
         if (options.keepLoading === undefined || options.keepLoading === false) {
             this.toggleLoading();
         }
+        this.loadingType = 'normal';
     }
     request(method, path, options = {}) {
         return new Promise((resolve, reject) => {
@@ -96,7 +96,7 @@ class client {
         this.options.globalCallbackOnError = callback;
     }
     setGlobalCallbackOnLoading(callback) {
-        this.options.setGlobalCallbackOnLoading = callback;
+        this.options.globalCallbackOnLoading = callback;
     }
 }
 exports.default = client;
