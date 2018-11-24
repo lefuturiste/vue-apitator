@@ -40,21 +40,61 @@ describe('requests', () => {
             expect(client.isLoading).toBeFalsy()
         })
     });
-    test('get_loading_type', () => {
-        client.setGlobalCallbackOnLoading((isLoading: boolean, loadingType?: string) => {
-            expect(loadingType).toBe('fooBar')
-        });
-        client.get('/status/200', { loadingType: 'fooBar' }).then((response: AxiosResponse) => {
-            expect(response.status).toEqual(200);
-        })
-    });
     test('get_with_authorization', () => {
         client.setAuthorizationToken('FooBar');
         client.get('/get', { withAuth: true }).then((response: AxiosResponse) => {
             expect(response.data.headers.Authorization).toEqual('Bearer FooBar');
         })
     });
+    test('get_loading_type', () => {
+        client.clearGlobalCallbacks();
+        client.setGlobalCallbackOnLoading((isLoading: boolean, loadingType?: string) => {
+            expect(isLoading).toBeTruthy();
+            expect(loadingType).toBe('fooBar')
+        });
+        client.get('/status/200', { loadingType: 'fooBar' }).then((response: AxiosResponse) => {
+            expect(client.loadingType).toEqual('normal');
+            expect(client.isLoading).toBeFalsy();
+            expect(response.status).toEqual(200);
+        }).catch((error) => {
+            console.log(error);
+            console.log('ERROR')
+        });
+        expect(client.loadingType).toEqual('fooBar');
+    });
+    test('get_with_loading', () => {
+        client.clearGlobalCallbacks();
+        client.setGlobalCallbackOnLoading((isLoading: boolean, loadingType?: string) => {
+            expect(isLoading).toBeTruthy();
+            expect(loadingType).toEqual('normal')
+        });
+        client.get('/get', { loading: true }).then((response: AxiosResponse) => {
+            expect(response.status).toEqual(200);
+            expect(client.isLoading).toBeFalsy();
+        }).catch((error) => {
+            console.log(error);
+            console.log('ERROR')
+        });
+        client.setGlobalCallbackOnLoading(() => {});
+        expect(client.isLoading).toBeTruthy();
+    });
+    test('get_without_loading', () => {
+        client.clearGlobalCallbacks();
+        client.setGlobalCallbackOnLoading((isLoading: boolean, loadingType?: string) => {
+            expect(isLoading).toBeFalsy();
+            expect(loadingType).toBe('normal')
+        });
+        client.get('/get', { loading: false }).then((response: AxiosResponse) => {
+            expect(response.status).toEqual(200);
+            expect(client.isLoading).toBeFalsy();
+        }).catch((error) => {
+            console.log(error);
+            console.log('ERROR')
+        });
+        expect(client.isLoading).toBeFalsy();
+    });
     test('put', () => {
+        client.clearGlobalCallbacks();
         client.setAuthorizationToken('FooBar');
         client.put('/put', { foo: 'bar' }).then((response: AxiosResponse) => {
             expect(response.data.json.foo).toEqual('bar');

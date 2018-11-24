@@ -4,7 +4,7 @@ import ClientOptionsInterface from "./Interfaces/ClientOptionsInterface";
 
 export default class client {
     public isLoading: boolean = false;
-    public loadingType: string = '';
+    public loadingType: string = 'normal';
     private options: ClientOptionsInterface;
     public authorizationToken: string = '';
     private authorizationHeader: string = '';
@@ -30,20 +30,25 @@ export default class client {
         }
     }
 
-    private resetLoadingState(options: RequestOptionsInterface): void {
+    private resetLoadingState(): void {
         this.httpErrors = 0;
-        if (options.keepLoading === undefined || options.keepLoading === false) {
-            this.toggleLoading();
-        }
         this.loadingType = 'normal';
+        this.isLoading = false;
+        if (this.options.globalCallbackOnLoading !== undefined) {
+            this.options.globalCallbackOnLoading(false, this.loadingType)
+        }
     }
 
     public request(method: string, path: string, options: RequestOptionsInterface = {}): Promise<any> {
+        this.isLoading = false;
+        this.loadingType = 'normal';
         return new Promise((resolve, reject) => {
             if (options.loadingType !== '' && options.loadingType !== undefined) {
                 this.loadingType = options.loadingType
             }
-            this.toggleLoading();
+            if (options.loading !== false) {
+                this.toggleLoading();
+            }
             let requestConfig: AxiosRequestConfig = {
                 method: method,
                 url: this.options.baseUrl + path,
@@ -59,7 +64,7 @@ export default class client {
             let maxHttpErrors = this.options.maxHttpErrors == undefined ? options.maxHttpErrors == undefined ? 0 : options.maxHttpErrors : this.options.maxHttpErrors;
             let alertOnError = this.options.alertOnError == undefined ? options.alertOnError == undefined ? true : options.alertOnError : this.options.alertOnError;
             HttpClient.request(requestConfig).then((response: AxiosResponse) => {
-                this.resetLoadingState(options);
+                this.resetLoadingState();
                 return resolve(response)
             }).catch((error: AxiosError) => {
                 if (this.httpErrors >= maxHttpErrors) {
@@ -67,7 +72,7 @@ export default class client {
                     if (alertOnError && this.options.globalCallbackOnError !== undefined) {
                         this.options.globalCallbackOnError(error)
                     }
-                    this.resetLoadingState(options);
+                    this.resetLoadingState();
                     return reject(error)
                 }
                 this.httpErrors++;
@@ -109,5 +114,12 @@ export default class client {
 
     public setGlobalCallbackOnLoading(callback: (isLoading: boolean, loadingType?: string) => void) {
         this.options.globalCallbackOnLoading = callback
+    }
+
+    public clearGlobalCallbacks() {
+        this.options.globalCallbackOnError = () => {
+        };
+        this.options.globalCallbackOnLoading = () => {
+        };
     }
 }

@@ -7,7 +7,7 @@ const axios_1 = __importDefault(require("axios"));
 class client {
     constructor(options) {
         this.isLoading = false;
-        this.loadingType = '';
+        this.loadingType = 'normal';
         this.authorizationToken = '';
         this.authorizationHeader = '';
         this.httpErrors = 0;
@@ -26,19 +26,24 @@ class client {
             this.options.globalCallbackOnLoading(this.isLoading, this.loadingType);
         }
     }
-    resetLoadingState(options) {
+    resetLoadingState() {
         this.httpErrors = 0;
-        if (options.keepLoading === undefined || options.keepLoading === false) {
-            this.toggleLoading();
-        }
         this.loadingType = 'normal';
+        this.isLoading = false;
+        if (this.options.globalCallbackOnLoading !== undefined) {
+            this.options.globalCallbackOnLoading(false, this.loadingType);
+        }
     }
     request(method, path, options = {}) {
+        this.isLoading = false;
+        this.loadingType = 'normal';
         return new Promise((resolve, reject) => {
             if (options.loadingType !== '' && options.loadingType !== undefined) {
                 this.loadingType = options.loadingType;
             }
-            this.toggleLoading();
+            if (options.loading !== false) {
+                this.toggleLoading();
+            }
             let requestConfig = {
                 method: method,
                 url: this.options.baseUrl + path,
@@ -54,7 +59,7 @@ class client {
             let maxHttpErrors = this.options.maxHttpErrors == undefined ? options.maxHttpErrors == undefined ? 0 : options.maxHttpErrors : this.options.maxHttpErrors;
             let alertOnError = this.options.alertOnError == undefined ? options.alertOnError == undefined ? true : options.alertOnError : this.options.alertOnError;
             axios_1.default.request(requestConfig).then((response) => {
-                this.resetLoadingState(options);
+                this.resetLoadingState();
                 return resolve(response);
             }).catch((error) => {
                 if (this.httpErrors >= maxHttpErrors) {
@@ -62,7 +67,7 @@ class client {
                     if (alertOnError && this.options.globalCallbackOnError !== undefined) {
                         this.options.globalCallbackOnError(error);
                     }
-                    this.resetLoadingState(options);
+                    this.resetLoadingState();
                     return reject(error);
                 }
                 this.httpErrors++;
@@ -97,6 +102,12 @@ class client {
     }
     setGlobalCallbackOnLoading(callback) {
         this.options.globalCallbackOnLoading = callback;
+    }
+    clearGlobalCallbacks() {
+        this.options.globalCallbackOnError = () => {
+        };
+        this.options.globalCallbackOnLoading = () => {
+        };
     }
 }
 exports.default = client;
