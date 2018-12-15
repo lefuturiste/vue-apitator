@@ -23,6 +23,10 @@ export default class client {
         this.authorizationHeader = 'Bearer ' + token
     }
 
+    public getAuthorizationToken(): string {
+        return this.authorizationToken;
+    }
+
     private toggleLoading() {
         this.isLoading = !this.isLoading;
         if (this.options.globalCallbackOnLoading !== undefined) {

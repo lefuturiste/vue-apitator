@@ -20,6 +20,9 @@ class client {
         this.authorizationToken = token;
         this.authorizationHeader = 'Bearer ' + token;
     }
+    getAuthorizationToken() {
+        return this.authorizationToken;
+    }
     toggleLoading() {
         this.isLoading = !this.isLoading;
         if (this.options.globalCallbackOnLoading !== undefined) {
