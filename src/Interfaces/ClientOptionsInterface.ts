@@ -9,8 +9,9 @@ export default interface ClientOptionsInterface {
     withCSRFToken?: boolean
     CSRFSecret?: string
     maxHttpErrors?: number
-    alertOnError?: boolean,
-    globalCallbackOnError?: (error: AxiosError) => void,
-    globalCallbackOnLoading?: (isLoading: boolean, loadingType?: string) => void,
+    alertOnError?: boolean
+    globalCallbackOnError?: (error: AxiosError) => void
+    globalCallbackOnLoading?: (isLoading: boolean, loadingType?: string) => void
     graphQLPath?: string
+    defaultToken?: string
 }

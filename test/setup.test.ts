@@ -11,4 +11,11 @@ describe('setup', () => {
         let client = new Client({baseUrl: baseUrl});
         expect(client.getApiBaseUrl()).toBe(baseUrl)
     });
+    test('test_default_token', () => {
+        let baseUrl = "https://example.com";
+        let defaultToken = "test";
+        let client = new Client({baseUrl: baseUrl, defaultToken: defaultToken});
+        expect(client.getApiBaseUrl()).toBe(baseUrl);
+        expect(client.getAuthorizationToken()).toBe(defaultToken)
+    });
 });

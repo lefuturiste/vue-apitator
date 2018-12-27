@@ -12,6 +12,7 @@ export default class client {
 
     constructor(options: ClientOptionsInterface) {
         this.options = options;
+        this.authorizationToken = options.defaultToken !== undefined ? options.defaultToken : '';
     }
 
     public getApiBaseUrl(): string {
