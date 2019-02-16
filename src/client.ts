@@ -71,7 +71,9 @@ export default class client {
             let maxHttpErrors = this.options.maxHttpErrors == undefined ? options.maxHttpErrors == undefined ? 0 : options.maxHttpErrors : this.options.maxHttpErrors;
             let alertOnError = this.options.alertOnError == undefined ? options.alertOnError == undefined ? true : options.alertOnError : this.options.alertOnError;
             HttpClient.request(requestConfig).then((response: AxiosResponse) => {
-                this.resetLoadingState();
+                if (options.keepLoading == false || options.keepLoading == undefined) {
+                    this.resetLoadingState();
+                }
                 return resolve(response)
             }).catch((error: AxiosError) => {
                 if (this.httpErrors >= maxHttpErrors) {
@@ -79,7 +81,9 @@ export default class client {
                     if (alertOnError && this.options.globalCallbackOnError !== undefined) {
                         this.options.globalCallbackOnError(error)
                     }
-                    this.resetLoadingState();
+                    if (options.keepLoading == false || options.keepLoading == undefined) {
+                        this.resetLoadingState();
+                    }
                     return reject(error)
                 }
                 this.httpErrors++;
