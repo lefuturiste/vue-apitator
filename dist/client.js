@@ -12,6 +12,9 @@ class client {
         this.authorizationHeader = '';
         this.httpErrors = 0;
         this.options = options;
+        if (options.defaultToken !== undefined) {
+            this.setAuthorizationToken(options.defaultToken);
+        }
     }
     getApiBaseUrl() {
         return this.options.baseUrl;
@@ -62,7 +65,9 @@ class client {
             let maxHttpErrors = this.options.maxHttpErrors == undefined ? options.maxHttpErrors == undefined ? 0 : options.maxHttpErrors : this.options.maxHttpErrors;
             let alertOnError = this.options.alertOnError == undefined ? options.alertOnError == undefined ? true : options.alertOnError : this.options.alertOnError;
             axios_1.default.request(requestConfig).then((response) => {
-                this.resetLoadingState();
+                if (options.keepLoading == false || options.keepLoading == undefined) {
+                    this.resetLoadingState();
+                }
                 return resolve(response);
             }).catch((error) => {
                 if (this.httpErrors >= maxHttpErrors) {
@@ -70,7 +75,9 @@ class client {
                     if (alertOnError && this.options.globalCallbackOnError !== undefined) {
                         this.options.globalCallbackOnError(error);
                     }
-                    this.resetLoadingState();
+                    if (options.keepLoading == false || options.keepLoading == undefined) {
+                        this.resetLoadingState();
+                    }
                     return reject(error);
                 }
                 this.httpErrors++;
