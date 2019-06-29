@@ -1,4 +1,4 @@
-import HttpClient, {AxiosError, AxiosRequestConfig, AxiosResponse} from 'axios';
+import HttpClient, {AxiosError, AxiosRequestConfig, AxiosResponse, Method} from 'axios';
 import RequestOptionsInterface from "./Interfaces/RequestOptionsInterface";
 import ClientOptionsInterface from "./Interfaces/ClientOptionsInterface";
 
@@ -46,7 +46,7 @@ export default class client {
         }
     }
 
-    public request(method: string, path: string, options: RequestOptionsInterface = {}): Promise<any> {
+    public request(method: Method, path: string, options: RequestOptionsInterface = {}): Promise<any> {
         this.isLoading = false;
         this.loadingType = 'normal';
         return new Promise((resolve, reject) => {
