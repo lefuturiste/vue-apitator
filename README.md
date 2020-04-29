@@ -39,4 +39,4 @@ or, to watch:
 
 You can contribute to apitator by forking this repository and pull request your changes. This lib is written in typescript, you can use `npm run dev` to start adding features!
 
-
+If you have any problems with this library, feel free to create an issue!
