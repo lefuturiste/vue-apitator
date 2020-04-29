@@ -1,20 +1,19 @@
-import HttpClient, {AxiosError, AxiosRequestConfig, AxiosResponse, Method} from 'axios';
-import RequestOptionsInterface from "./Interfaces/RequestOptionsInterface";
-import ClientOptionsInterface from "./Interfaces/ClientOptionsInterface";
+import HttpClient, {AxiosError, AxiosRequestConfig, AxiosResponse, Method} from 'axios'
+import RequestOptionsInterface from "./Interfaces/RequestOptionsInterface"
+import ClientOptionsInterface from "./Interfaces/ClientOptionsInterface"
 
 export default class client {
-    public isLoading: boolean = false;
-    public loadingType: string = 'normal';
-    private options: ClientOptionsInterface;
-    public authorizationToken: string = '';
-    private authorizationHeader: string = '';
-    public httpErrors: number = 0;
+    public isLoading: boolean = false
+    public loadingType: string = 'normal'
+    private options: ClientOptionsInterface
+    public authorizationToken: string = ''
+    private authorizationHeader: string = ''
+    public httpErrors: number = 0
 
     constructor(options: ClientOptionsInterface) {
-        this.options = options;
-        if (options.defaultToken !== undefined) {
+        this.options = options
+        if (options.defaultToken !== undefined)
             this.setAuthorizationToken(options.defaultToken)
-        }
     }
 
     public getApiBaseUrl(): string {
@@ -22,71 +21,62 @@ export default class client {
     }
 
     public setAuthorizationToken(token: string) {
-        this.authorizationToken = token;
+        this.authorizationToken = token
         this.authorizationHeader = 'Bearer ' + token
     }
 
     public getAuthorizationToken(): string {
-        return this.authorizationToken;
+        return this.authorizationToken
     }
 
     private toggleLoading() {
-        this.isLoading = !this.isLoading;
-        if (this.options.globalCallbackOnLoading !== undefined) {
+        this.isLoading = !this.isLoading
+        if (this.options.globalCallbackOnLoading !== undefined)
             this.options.globalCallbackOnLoading(this.isLoading, this.loadingType)
-        }
     }
 
     private resetLoadingState(): void {
-        this.httpErrors = 0;
-        this.loadingType = 'normal';
-        this.isLoading = false;
-        if (this.options.globalCallbackOnLoading !== undefined) {
+        this.httpErrors = 0
+        this.loadingType = 'normal'
+        this.isLoading = false
+        if (this.options.globalCallbackOnLoading !== undefined)
             this.options.globalCallbackOnLoading(false, this.loadingType)
-        }
     }
 
     public request(method: Method, path: string, options: RequestOptionsInterface = {}): Promise<any> {
-        this.isLoading = false;
-        this.loadingType = 'normal';
+        this.isLoading = false
+        this.loadingType = 'normal'
         return new Promise((resolve, reject) => {
-            if (options.loadingType !== '' && options.loadingType !== undefined) {
+            if (options.loadingType !== '' && options.loadingType !== undefined)
                 this.loadingType = options.loadingType
-            }
-            if (options.loading !== false) {
-                this.toggleLoading();
-            }
+            if (options.loading !== false)
+                this.toggleLoading()
             let requestConfig: AxiosRequestConfig = {
                 method: method,
                 url: this.options.baseUrl + path,
                 headers: {}
-            };
-            requestConfig.headers = options.headers == undefined ? {} : options.headers;
-            if (options.body !== undefined) {
+            }
+            requestConfig.headers = options.headers == undefined ? {} : options.headers
+            if (options.body !== undefined)
                 requestConfig.data = options.body
-            }
-            if (options.withAuth) {
+            if (options.withAuth)
                 requestConfig.headers.Authorization = this.authorizationHeader
-            }
-            let maxHttpErrors = this.options.maxHttpErrors == undefined ? options.maxHttpErrors == undefined ? 0 : options.maxHttpErrors : this.options.maxHttpErrors;
-            let alertOnError = this.options.alertOnError == undefined ? options.alertOnError == undefined ? true : options.alertOnError : this.options.alertOnError;
+            let maxHttpErrors = this.options.maxHttpErrors == undefined ? options.maxHttpErrors == undefined ? 0 : options.maxHttpErrors : this.options.maxHttpErrors
+            let alertOnError = this.options.alertOnError == undefined ? options.alertOnError == undefined ? true : options.alertOnError : this.options.alertOnError
             HttpClient.request(requestConfig).then((response: AxiosResponse) => {
-                if (options.keepLoading == false || options.keepLoading == undefined) {
-                    this.resetLoadingState();
-                }
+                if (options.keepLoading == false || options.keepLoading == undefined)
+                    this.resetLoadingState()
                 return resolve(response)
             }).catch((error: AxiosError) => {
                 if (this.httpErrors >= maxHttpErrors) {
                     // end of this loop
-                    if (alertOnError && this.options.globalCallbackOnError !== undefined) {
+                    if (alertOnError && this.options.globalCallbackOnError !== undefined)
                         this.options.globalCallbackOnError(error)
-                    }
-                    if (options.keepLoading == false || options.keepLoading == undefined) {
-                        this.resetLoadingState();
-                    }
+                    if (options.keepLoading == false || options.keepLoading == undefined)
+                        this.resetLoadingState()
                     return reject(error)
                 }
-                this.httpErrors++;
+                this.httpErrors++
                 return this.request(method, path, options)
             })
         })
@@ -97,12 +87,12 @@ export default class client {
     }
 
     public post(path: string, body: object, options: RequestOptionsInterface = {}): Promise<any> {
-        options.body = body;
+        options.body = body
         return this.request('POST', path, options)
     }
 
     public put(path: string, body: object, options: RequestOptionsInterface = {}): Promise<any> {
-        options.body = body;
+        options.body = body
         return this.request('PUT', path, options)
     }
 
@@ -111,11 +101,11 @@ export default class client {
     }
 
     public graphQL(query: string, variables: object = {}, options: RequestOptionsInterface = {}): Promise<any> {
-        let path = this.options.graphQLPath == undefined ? '/' : this.options.graphQLPath;
+        let path = this.options.graphQLPath == undefined ? '/' : this.options.graphQLPath
         options.body = {
             query: query,
             variables: variables
-        };
+        }
         return this.request('POST', path, options)
     }
 
@@ -128,9 +118,7 @@ export default class client {
     }
 
     public clearGlobalCallbacks() {
-        this.options.globalCallbackOnError = () => {
-        };
-        this.options.globalCallbackOnLoading = () => {
-        };
+        this.options.globalCallbackOnError = () => {}
+        this.options.globalCallbackOnLoading = () => {}
     }
 }
