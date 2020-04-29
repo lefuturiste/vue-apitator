@@ -12,9 +12,8 @@ class client {
         this.authorizationHeader = '';
         this.httpErrors = 0;
         this.options = options;
-        if (options.defaultToken !== undefined) {
+        if (options.defaultToken !== undefined)
             this.setAuthorizationToken(options.defaultToken);
-        }
     }
     getApiBaseUrl() {
         return this.options.baseUrl;
@@ -28,56 +27,47 @@ class client {
     }
     toggleLoading() {
         this.isLoading = !this.isLoading;
-        if (this.options.globalCallbackOnLoading !== undefined) {
+        if (this.options.globalCallbackOnLoading !== undefined)
             this.options.globalCallbackOnLoading(this.isLoading, this.loadingType);
-        }
     }
     resetLoadingState() {
         this.httpErrors = 0;
         this.loadingType = 'normal';
         this.isLoading = false;
-        if (this.options.globalCallbackOnLoading !== undefined) {
+        if (this.options.globalCallbackOnLoading !== undefined)
             this.options.globalCallbackOnLoading(false, this.loadingType);
-        }
     }
     request(method, path, options = {}) {
         this.isLoading = false;
         this.loadingType = 'normal';
         return new Promise((resolve, reject) => {
-            if (options.loadingType !== '' && options.loadingType !== undefined) {
+            if (options.loadingType !== '' && options.loadingType !== undefined)
                 this.loadingType = options.loadingType;
-            }
-            if (options.loading !== false) {
+            if (options.loading !== false)
                 this.toggleLoading();
-            }
             let requestConfig = {
                 method: method,
                 url: this.options.baseUrl + path,
                 headers: {}
             };
             requestConfig.headers = options.headers == undefined ? {} : options.headers;
-            if (options.body !== undefined) {
+            if (options.body !== undefined)
                 requestConfig.data = options.body;
-            }
-            if (options.withAuth) {
+            if (options.withAuth)
                 requestConfig.headers.Authorization = this.authorizationHeader;
-            }
             let maxHttpErrors = this.options.maxHttpErrors == undefined ? options.maxHttpErrors == undefined ? 0 : options.maxHttpErrors : this.options.maxHttpErrors;
             let alertOnError = this.options.alertOnError == undefined ? options.alertOnError == undefined ? true : options.alertOnError : this.options.alertOnError;
             axios_1.default.request(requestConfig).then((response) => {
-                if (options.keepLoading == false || options.keepLoading == undefined) {
+                if (options.keepLoading == false || options.keepLoading == undefined)
                     this.resetLoadingState();
-                }
                 return resolve(response);
             }).catch((error) => {
                 if (this.httpErrors >= maxHttpErrors) {
                     // end of this loop
-                    if (alertOnError && this.options.globalCallbackOnError !== undefined) {
+                    if (alertOnError && this.options.globalCallbackOnError !== undefined)
                         this.options.globalCallbackOnError(error);
-                    }
-                    if (options.keepLoading == false || options.keepLoading == undefined) {
+                    if (options.keepLoading == false || options.keepLoading == undefined)
                         this.resetLoadingState();
-                    }
                     return reject(error);
                 }
                 this.httpErrors++;
@@ -114,10 +104,8 @@ class client {
         this.options.globalCallbackOnLoading = callback;
     }
     clearGlobalCallbacks() {
-        this.options.globalCallbackOnError = () => {
-        };
-        this.options.globalCallbackOnLoading = () => {
-        };
+        this.options.globalCallbackOnError = () => { };
+        this.options.globalCallbackOnLoading = () => { };
     }
 }
 exports.default = client;

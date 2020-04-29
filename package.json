@@ -1,6 +1,6 @@
 {
   "name": "vue-apitator",
-  "version": "0.0.14",
+  "version": "0.0.15",
   "description": "A simple way to query your REST or your GraphQL API in your Vue.js app",
   "main": "dist/index.js",
   "scripts": {
