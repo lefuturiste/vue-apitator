@@ -1,12 +1,18 @@
 {
   "compilerOptions": {
+    "lib": ["es2017", "es7", "es6", "dom"],
     "module": "commonjs",
     "esModuleInterop": true,
     "outDir": "dist",
     "target": "es6",
-    "strict": true
+    "strict": true,
+    "declaration": true
   },
   "include": [
     "src/index.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist"
   ]
 }

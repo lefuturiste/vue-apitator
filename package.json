@@ -1,8 +1,9 @@
 {
   "name": "vue-apitator",
-  "version": "0.0.15",
+  "version": "0.0.16",
   "description": "A simple way to query your REST or your GraphQL API in your Vue.js app",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "jest --verbose --detectOpenHandles",
     "test-watch": "jest --verbose --watchAll",
