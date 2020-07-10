@@ -4,8 +4,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const client_1 = __importDefault(require("./client"));
+const vue_1 = __importDefault(require("vue"));
 exports.default = {
-    install(Vue, options) {
-        Vue.prototype.$apitator = new client_1.default(options);
+    install(context, options) {
+        vue_1.default.prototype.$apitator = new client_1.default(options);
     }
 };
