@@ -1,3 +1,5 @@
+import { AxiosRequestConfig } from 'axios'
+
 export default interface RequestOptionsInterface {
     withAuth?: boolean
     keepLoading?: boolean
@@ -6,5 +8,6 @@ export default interface RequestOptionsInterface {
     body?: object
     maxHttpErrors?: number
     alertOnError?: boolean,
-    headers?: object
+    headers?: object,
+    axiosConfig?: AxiosRequestConfig
 }

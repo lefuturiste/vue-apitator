@@ -57,6 +57,7 @@ class client {
                 requestConfig.headers.Authorization = this.authorizationHeader;
             let maxHttpErrors = this.options.maxHttpErrors == undefined ? options.maxHttpErrors == undefined ? 0 : options.maxHttpErrors : this.options.maxHttpErrors;
             let alertOnError = this.options.alertOnError == undefined ? options.alertOnError == undefined ? true : options.alertOnError : this.options.alertOnError;
+            requestConfig = Object.assign({}, options.axiosConfig, requestConfig);
             axios_1.default.request(requestConfig).then((response) => {
                 if (options.keepLoading == false || options.keepLoading == undefined)
                     this.resetLoadingState();
