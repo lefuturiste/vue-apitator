@@ -7,14 +7,18 @@ describe('requests', () => {
     });
     test('get', () => {
         return new Promise((resolve) => {
-            client.get('/get?foo=bar', {
+            client.get('/get', {
                 headers: {
                     'X-Foo': 'bar'
+                },
+                params: {
+                    'foo': 'bar'
                 }
             }).then((response: AxiosResponse) => {
                 expect(response.status).toBe(200);
                 expect(response.data.args).toEqual({foo: 'bar'});
                 expect(response.data.headers['X-Foo']).toBe('bar');
+                expect(response.data.args['foo']).toBe('bar');
                 expect(client.isLoading).toBeFalsy();
                 resolve();
             });

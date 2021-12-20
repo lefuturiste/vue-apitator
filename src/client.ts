@@ -57,6 +57,7 @@ export default class client {
                 headers: {}
             }
             requestConfig.headers = options.headers == undefined ? {} : options.headers
+            requestConfig.params = options.params == undefined ? {} : options.params
             if (options.body !== undefined)
                 requestConfig.data = options.body
             if (options.withAuth)

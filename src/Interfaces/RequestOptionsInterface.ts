@@ -9,5 +9,6 @@ export default interface RequestOptionsInterface {
     maxHttpErrors?: number
     alertOnError?: boolean,
     headers?: object,
+    params?: object,
     axiosConfig?: AxiosRequestConfig
 }
