@@ -8,7 +8,7 @@ export default interface RequestOptionsInterface {
     body?: object
     maxHttpErrors?: number
     alertOnError?: boolean,
-    headers?: object,
+    headers?: Record<string, string>,
     params?: object,
     axiosConfig?: AxiosRequestConfig
 }

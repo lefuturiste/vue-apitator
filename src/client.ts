@@ -51,17 +51,23 @@ export default class client {
                 this.loadingType = options.loadingType
             if (options.loading !== false)
                 this.toggleLoading()
+            if (!options.headers)
+                options.headers = {}
+
+            if (options.withAuth) {
+                options.headers.Authorization = this.authorizationHeader
+            }
+
             let requestConfig: AxiosRequestConfig = {
                 method: method,
                 url: this.options.baseUrl + path,
-                headers: {}
+                headers: options.headers
             }
-            requestConfig.headers = options.headers == undefined ? {} : options.headers
             requestConfig.params = options.params == undefined ? {} : options.params
+            
             if (options.body !== undefined)
                 requestConfig.data = options.body
-            if (options.withAuth)
-                requestConfig.headers.Authorization = this.authorizationHeader
+            
             let maxHttpErrors = this.options.maxHttpErrors == undefined ? options.maxHttpErrors == undefined ? 0 : options.maxHttpErrors : this.options.maxHttpErrors
             let alertOnError = this.options.alertOnError == undefined ? options.alertOnError == undefined ? true : options.alertOnError : this.options.alertOnError
             requestConfig = { ...options.axiosConfig, ...requestConfig }
