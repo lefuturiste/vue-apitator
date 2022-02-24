@@ -1,6 +1,6 @@
 # Vue-Apitator
 
-![Unit test workflow](https://github.com/lefuturiste/vue-apitator/actions/workflows/tests/badge.svg)
+![Unit test workflow](https://github.com/lefuturiste/vue-apitator/actions/workflows/tests.yml/badge.svg)
 
 A simple way to query your REST or your GraphQL API in your Vue.js app
 
