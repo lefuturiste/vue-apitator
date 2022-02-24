@@ -53,10 +53,8 @@ export default class client {
                 this.toggleLoading()
             if (!options.headers)
                 options.headers = {}
-
-            if (options.withAuth) {
+            if (options.withAuth)
                 options.headers.Authorization = this.authorizationHeader
-            }
 
             let requestConfig: AxiosRequestConfig = {
                 method: method,

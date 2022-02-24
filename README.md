@@ -1,10 +1,16 @@
-# [WIP] Apitator
+# Vue-Apitator
+
+![Unit test workflow](https://github.com/lefuturiste/vue-apitator/actions/workflows/tests/badge.svg)
 
 A simple way to query your REST or your GraphQL API in your Vue.js app
 
 ## Installation
 
 `npm install --save vue-apitator`
+
+or
+
+`yarn add vue-apitator`
 
 ## Usage
 
